@@ -7,7 +7,7 @@ close all;
 
 % burgers
 
-        Nx = 200; % spatial grid points
+        Nx = 20; % spatial grid points
         Nt = 10.^(1:4); % timesteps to test
         Nt_ref = 10^5;
         eqn_name = sprintf('Burgers Equation (Nx = %i)', Nx);
@@ -22,6 +22,9 @@ close all;
         methods_IMEX = {
             @IMEXeuler
             @expIntegrator
+            @IMEXmidpoint
+            @IMEXdirk
+            @expRK
         };
         
         Nc = length(methods_classical);
@@ -53,8 +56,8 @@ end
 for i = 1:Ni
     for j = 1:length(Nt)
         [ys,cpu_time] = methods_IMEX{i}(L,N,tspan,y0,Nt(j));
-        error(j,i+Ni) = errorNorm(ys(:,end));
-        time(j,i+Ni) = cpu_time;
+        error(j,i+Nc) = errorNorm(ys(:,end));
+        time(j,i+Nc) = cpu_time;
     end
 end
 
@@ -68,6 +71,9 @@ methods_full = {
     @heun
     @IMEXeuler
     @expIntegrator
+    @IMEXmidpoint
+    @IMEXdirk
+    @expRK
     };
 
 getMethodName = @(f) functions(f).function;

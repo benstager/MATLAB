@@ -6,7 +6,7 @@
 clear;
 
 % Test Spatial Grid Points 2^exps - 1
-exps = 4:10;
+exps = 4:8;
 
 % compute Burgers fine numerical solution
 Nx_ref = 2^(exps(end)+2) - 1;
@@ -24,6 +24,8 @@ methods_classical = {
 methods_IMEX = {
     { @IMEXeuler,   @(n) stepsizeSelector(tspan, n, 50, 100, 2, 1) }   % obtained using Nx = 50 and [Userx,Usery] = ginput(1)
     { @expIntegrator,      @(n) stepsizeSelector(tspan, n, 50, 100, 2, 1) }     % obtained using Nx = 50 and [Userx,Usery] = ginput(1)
+    { @IMEXmidpoint,    @(n) stepsizeSelector(tspan,n,50,100,2,2)}
+    { @IMEXdirk,    @(n) stepsizeSelector(tspan,n,50,100,2,2)}
     };
 
 Nc = length(methods_classical);
@@ -70,7 +72,7 @@ end
 %% Generate Plots
 
 % legend names for methods
-methods = {@euler,@heun,@IMEXeuler,@expIntegrator};
+methods = {@euler,@heun,@IMEXeuler,@expIntegrator,@IMEXmidpoint};
 getMethodName = @(f) functions(f).function;
 legend_entries = cellfun(getMethodName, methods, 'UniformOutput', false);
 
